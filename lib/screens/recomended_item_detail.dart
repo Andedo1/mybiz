@@ -44,7 +44,7 @@ class RecommendedItemDetail extends StatelessWidget {
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
               background: Image.asset(
-                "assets/image/some.png",
+                "assets/images/meter.jpg",
                 width: double.maxFinite,
                 fit: BoxFit.cover,
               ),
