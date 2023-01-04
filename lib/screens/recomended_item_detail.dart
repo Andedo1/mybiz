@@ -3,6 +3,9 @@ import 'package:majisoft/utils/dimensions.dart';
 import 'package:majisoft/widgets/app_icon.dart';
 import 'package:majisoft/widgets/big_text.dart';
 import 'package:majisoft/widgets/expandable_text.dart';
+import 'package:get/get.dart';
+
+import '../routes/routes_helper.dart';
 
 class RecommendedItemDetail extends StatelessWidget {
   const RecommendedItemDetail({Key? key}) : super(key: key);
@@ -14,19 +17,25 @@ class RecommendedItemDetail extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            toolbarHeight: 80,
+            toolbarHeight: 70,
+            automaticallyImplyLeading: false,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppIcon(icon: Icons.clear,),
+                GestureDetector(
+                  onTap: (){
+                    Get.toNamed(RoutesHelper.getInitial());
+                  },
+                  child: AppIcon(icon: Icons.clear,),
+                ),
                 AppIcon(icon: Icons.shopping_cart_outlined)
               ],
             ),
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(20),
+              preferredSize: const Size.fromHeight(20),
               child: Container(
                 width: double.maxFinite,
-                padding: EdgeInsets.only(top: 5, bottom: 10),
+                padding: const EdgeInsets.only(top: 5, bottom: 10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(Dimension.radius20),

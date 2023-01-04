@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:majisoft/routes/routes_helper.dart';
 import 'package:majisoft/utils/dimensions.dart';
 import 'package:majisoft/widgets/app_icon.dart';
 import 'package:majisoft/widgets/big_text.dart';
 import 'package:majisoft/widgets/column.dart';
 import 'package:majisoft/widgets/expandable_text.dart';
+import 'package:get/get.dart';
+
+import '../controllers/popular_item_controller.dart';
+import '../utils/app_constants.dart';
 
 
 class ItemDetail extends StatelessWidget {
-  const ItemDetail({Key? key}) : super(key: key);
+  int pageId;
+  ItemDetail({Key? key, required this.pageId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var item = Get.find<PopularItemController>().popularItemList[pageId];
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -26,8 +33,8 @@ class ItemDetail extends StatelessWidget {
                 color: Colors.yellow,
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: AssetImage(
-                    "assets/image/some.png"
+                  image: NetworkImage(
+                    AppConstants.BASE_URL+"/uploads/"+item.img!
                   )
                 )
               ),
@@ -41,7 +48,12 @@ class ItemDetail extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppIcon(icon: Icons.arrow_back_ios),
+                GestureDetector(
+                  onTap: (){
+                    Get.toNamed(RoutesHelper.getInitial());
+                  },
+                  child: AppIcon(icon: Icons.arrow_back_ios),
+                ),
                 AppIcon(icon: Icons.shopping_cart_checkout_outlined),
               ],
             ),
@@ -64,21 +76,13 @@ class ItemDetail extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppColumn(text: "Water Meter",),
+                    AppColumn(text: item.name!,),
                     SizedBox(height: Dimension.height20,),
                     BigText(text: "Introduce"),
                     SizedBox(height: Dimension.height20,),
-                    const Expanded(
+                    Expanded(
                       child: SingleChildScrollView(
-                        child: ExpandableText(text: "Electromagnetic series ELMAG-600 Battery powered flow meter is"
-                            "is ideal where power supply in not available on field, the battery power gives the flexibility to install a"
-                            "a reliable flow meter virtually anywhere without distorting accuracy and performance."
-                            "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install."
-                            "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install."
-                            "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install."
-                            "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install."
-                            "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install."
-                            "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install.",),
+                        child: ExpandableText(text: item.description!,),
                       ),
                     )
                   ],
@@ -122,7 +126,7 @@ class ItemDetail extends StatelessWidget {
                 borderRadius: BorderRadius.circular(Dimension.radius20),
                 color: Colors.green,
               ),
-              child: BigText(text: "Ksh100 | Add to cart", color: Colors.white,),
+              child: BigText(text: "Ksh${item.price!} | Add to cart", color: Colors.white,),
             )
           ],
         ),

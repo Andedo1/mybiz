@@ -14,7 +14,7 @@ class IconAndText extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, color: iconcolor, size: Dimension.iconSize24,),
-        SizedBox(width: 10,),
+        SizedBox(width: 5,),
         SmallText(text: text,)
       ],
     );
