@@ -103,7 +103,7 @@ class _ItemBodyState extends State<ItemBody> {
               itemBuilder: (context, index){
                 return GestureDetector(
                   onTap: (){
-                    Get.toNamed(RoutesHelper.getRecommendedItem());
+                    Get.toNamed(RoutesHelper.getRecommendedItem(index));
                   },
                   child: Container(
                     margin: EdgeInsets.only(left: Dimension.width20, right: Dimension.width20, bottom: Dimension.height10),

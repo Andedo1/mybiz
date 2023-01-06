@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:majisoft/controllers/cart_controller.dart';
+import 'package:majisoft/models/product_model.dart';
 import 'package:majisoft/routes/routes_helper.dart';
 import 'package:majisoft/utils/dimensions.dart';
 import 'package:majisoft/widgets/app_icon.dart';
@@ -18,6 +20,8 @@ class ItemDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var item = Get.find<PopularItemController>().popularItemList[pageId];
+    // Initialize Items to zero
+    Get.find<PopularItemController>().initItem(item, Get.find<CartController>());
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -54,7 +58,31 @@ class ItemDetail extends StatelessWidget {
                   },
                   child: AppIcon(icon: Icons.arrow_back_ios),
                 ),
-                AppIcon(icon: Icons.shopping_cart_checkout_outlined),
+                GetBuilder<PopularItemController>(builder: (controller){
+                  return Stack(
+                    children: [
+                      AppIcon(icon: Icons.shopping_cart_checkout_outlined),
+                      Get.find<PopularItemController>().totalItems>=1?
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: AppIcon(
+                          icon: Icons.circle,
+                          size: 20,
+                          iconColor: Colors.transparent,
+                          backgroundColor: Colors.blue,
+                        ),
+                      ) :
+                      Container(),
+                      Positioned(                        top: 0,0.isEven
+                        right: 0,
+                        child: BigText(text: Get.find<PopularItemController>().totalItems.toString(),
+                          size: 12, color: Colors.white,
+                        ),
+                      )
+                    ],
+                  );
+                },)
               ],
             ),
           ),
@@ -88,49 +116,68 @@ class ItemDetail extends StatelessWidget {
                   ],
                 )
             ),
-          )
+          ),
         ],
       ),
-      bottomNavigationBar: Container(
-        height: Dimension.bottomHeight,
-        padding: EdgeInsets.only(top: Dimension.height30, bottom: Dimension.height30, left: Dimension.width20, right: Dimension.width20),
-        decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.4),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(Dimension.radius20*2),
-            topRight: Radius.circular(Dimension.radius20*2),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: Dimension.height20, bottom: Dimension.height20, left: Dimension.width20, right: Dimension.width20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimension.radius20),
-                color: Colors.white,
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.remove, color: Colors.black,),
-                  SizedBox(width: Dimension.width10,),
-                  BigText(text: " 0 ", size: Dimension.font26,),
-                  SizedBox(width: Dimension.width10,),
-                  Icon(Icons.add, color: Colors.black,)
-                ],
+      bottomNavigationBar: GetBuilder<PopularItemController>(
+        builder: (popularItem){
+          return Container(
+            height: Dimension.bottomHeight,
+            padding: EdgeInsets.only(top: Dimension.height30, bottom: Dimension.height30, left: Dimension.width20, right: Dimension.width20),
+            decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(0.4),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(Dimension.radius20*2),
+                topRight: Radius.circular(Dimension.radius20*2),
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(top: Dimension.height20, bottom: Dimension.height20, left: Dimension.width20, right: Dimension.width20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimension.radius20),
-                color: Colors.green,
-              ),
-              child: BigText(text: "Ksh${item.price!} | Add to cart", color: Colors.white,),
-            )
-          ],
-        ),
-      ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: Dimension.height20, bottom: Dimension.height20, left: Dimension.width20, right: Dimension.width20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(Dimension.radius20),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: (){
+                          popularItem.setQuantity(false);
+                        },
+                        child: Icon(Icons.remove, color: Colors.black,),
+                      ),
+                      SizedBox(width: Dimension.width10,),
+                      BigText(text: popularItem.inCartItems.toString(), size: Dimension.font20,),
+                      SizedBox(width: Dimension.width10,),
+                      GestureDetector(
+                        onTap: (){
+                          popularItem.setQuantity(true);
+                        },
+                        child: Icon(Icons.add, color: Colors.black,),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    popularItem.addItem(item);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(top: Dimension.height20, bottom: Dimension.height20, left: Dimension.width20, right: Dimension.width20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(Dimension.radius20),
+                      color: Colors.green,
+                    ),
+                    child: BigText(text: "Ksh${item.price!} | Add to cart", color: Colors.white,),
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      )
     );
   }
 }

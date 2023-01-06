@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:majisoft/controllers/recommended_item_controller.dart';
 import 'package:majisoft/utils/dimensions.dart';
 import 'package:majisoft/widgets/app_icon.dart';
 import 'package:majisoft/widgets/big_text.dart';
@@ -6,12 +7,15 @@ import 'package:majisoft/widgets/expandable_text.dart';
 import 'package:get/get.dart';
 
 import '../routes/routes_helper.dart';
+import '../utils/app_constants.dart';
 
 class RecommendedItemDetail extends StatelessWidget {
-  const RecommendedItemDetail({Key? key}) : super(key: key);
+  int pageId;
+  RecommendedItemDetail({Key? key, required this.pageId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var item = Get.find<RecommendedItemController>().recommendedItemList[pageId];
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -44,7 +48,7 @@ class RecommendedItemDetail extends StatelessWidget {
                   color: Colors.white,
                 ),
                 child: Center(
-                  child: BigText(size: Dimension.font26, text: "Water Meter",),
+                  child: BigText(size: Dimension.font26, text: item.name!,),
                 ),
               ),
             ),
@@ -52,8 +56,8 @@ class RecommendedItemDetail extends StatelessWidget {
             backgroundColor: Colors.yellow,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                "assets/images/meter.jpg",
+              background: Image.network(
+                AppConstants.BASE_URL+"/uploads/"+item.img!,
                 width: double.maxFinite,
                 fit: BoxFit.cover,
               ),
@@ -64,16 +68,7 @@ class RecommendedItemDetail extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.only(left: Dimension.width20, right: Dimension.width20),
-                  child: const ExpandableText(text: "Electromagnetic series ELMAG-600 Battery powered flow meter is"
-                      "is ideal where power supply in not available on field, the battery power gives the flexibility to install a"
-                      "a reliable flow meter virtually anywhere without distorting accuracy and performance."
-                      "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install."
-                      "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install."
-                      "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install."
-                      "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install."
-                      "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install."
-                      "The battery on ELMAG has a lifespan of up to 10yrs. The meter is very easy to use and simple to install.",
-                  ),
+                  child: ExpandableText(text: item.description!,),
                 ),
               ],
             ),
@@ -98,7 +93,7 @@ class RecommendedItemDetail extends StatelessWidget {
                   children: [
                     AppIcon(icon: Icons.remove, iconSize: Dimension.iconSize24, iconColor: Colors.white, backgroundColor: Colors.blue,),
                     SizedBox(width: Dimension.width10,),
-                    BigText(text: "Ksh 100 "+"X "+"0", color: Colors.black, size: Dimension.font26,),
+                    BigText(text: "Ksh ${item.price!} X 0", color: Colors.black, size: Dimension.font26,),
                     SizedBox(width: Dimension.width10,),
                     AppIcon(icon: Icons.add, iconSize: Dimension.iconSize24, iconColor: Colors.white, backgroundColor: Colors.blue,),
                   ],

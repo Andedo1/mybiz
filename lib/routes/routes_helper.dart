@@ -9,12 +9,15 @@ class RoutesHelper{
   static const String recommendedItem = "/recommended-item";
 
   static String getPopularItem(int pageId)=>'$popularItem?pageId=$pageId';
-  static String getRecommendedItem()=>recommendedItem;
+  static String getRecommendedItem(int pageId)=>'$recommendedItem?pageId=$pageId';
   static String getInitial()=>initial;
 
   static List<GetPage> routes = [
     GetPage(name: initial, page: ()=>const MainItem()),
-    GetPage(name: recommendedItem, page: ()=>const RecommendedItemDetail()),
+    GetPage(name: recommendedItem, page: (){
+      var pageId = Get.parameters['pageId'];
+      return RecommendedItemDetail(pageId:int.parse(pageId!));
+    }),
     GetPage(name: popularItem, page: () {
       var pageId=Get.parameters['pageId'];
       return ItemDetail(pageId:int.parse(pageId!));
