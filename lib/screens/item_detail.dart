@@ -74,7 +74,8 @@ class ItemDetail extends StatelessWidget {
                         ),
                       ) :
                       Container(),
-                      Positioned(                        top: 0,0.isEven
+                      Positioned(
+                        top: 0,
                         right: 0,
                         child: BigText(text: Get.find<PopularItemController>().totalItems.toString(),
                           size: 12, color: Colors.white,
