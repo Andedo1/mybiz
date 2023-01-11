@@ -41,4 +41,7 @@ class Dimension{
   //Bottom Height
   static double bottomHeight = screenHeight/7.03;
 
+  //SplashScreen Dimension
+  static double splashImg = screenHeight/3.38;
+
 }

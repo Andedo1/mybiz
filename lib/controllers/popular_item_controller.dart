@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:majisoft/controllers/cart_controller.dart';
 import 'package:majisoft/data/repository/popular_item_repo.dart';
 
+import '../models/cart_model.dart';
 import '../models/product_model.dart';
 
 
@@ -51,6 +52,10 @@ class PopularItemController extends GetxController{
           backgroundColor: Colors.blue,
           colorText: Colors.white
       );
+      if(_inCartItems>0){
+        _quantity = -_inCartItems;
+        return _quantity;
+      }
       return 0;
     }else if((_inCartItems+quantity)>4000){
       Get.snackbar('Item count', "You can't increase more!",
@@ -92,5 +97,9 @@ class PopularItemController extends GetxController{
 
   int get totalItems{
     return _cart.totalItems;
+  }
+
+  List<CartModel> get getItems{
+    return _cart.getItems;
   }
 }

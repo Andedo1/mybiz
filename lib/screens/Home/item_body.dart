@@ -37,6 +37,7 @@ class _ItemBodyState extends State<ItemBody> {
   @override
   void dispose(){
     pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -103,7 +104,7 @@ class _ItemBodyState extends State<ItemBody> {
               itemBuilder: (context, index){
                 return GestureDetector(
                   onTap: (){
-                    Get.toNamed(RoutesHelper.getRecommendedItem(index));
+                    Get.toNamed(RoutesHelper.getRecommendedItem(index, "home"));
                   },
                   child: Container(
                     margin: EdgeInsets.only(left: Dimension.width20, right: Dimension.width20, bottom: Dimension.height10),
@@ -197,7 +198,7 @@ class _ItemBodyState extends State<ItemBody> {
         children: [
           GestureDetector(
             onTap: (){
-              Get.toNamed(RoutesHelper.getPopularItem(index));
+              Get.toNamed(RoutesHelper.getPopularItem(index, "home"));
             },
             child: Container (
               height: Dimension.pageViewContainer,

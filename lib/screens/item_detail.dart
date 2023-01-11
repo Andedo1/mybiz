@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:majisoft/controllers/cart_controller.dart';
-import 'package:majisoft/models/product_model.dart';
 import 'package:majisoft/routes/routes_helper.dart';
 import 'package:majisoft/utils/dimensions.dart';
 import 'package:majisoft/widgets/app_icon.dart';
@@ -14,8 +13,9 @@ import '../utils/app_constants.dart';
 
 
 class ItemDetail extends StatelessWidget {
-  int pageId;
-  ItemDetail({Key? key, required this.pageId}) : super(key: key);
+  final int pageId;
+  final String page;
+  const ItemDetail({Key? key, required this.pageId, required this.page}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,34 +54,46 @@ class ItemDetail extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: (){
-                    Get.toNamed(RoutesHelper.getInitial());
+                    if(page=="cart"){
+                      Get.toNamed(RoutesHelper.getCart());
+                    }else{
+                      Get.toNamed(RoutesHelper.getInitial());
+                    }
                   },
                   child: AppIcon(icon: Icons.arrow_back_ios),
                 ),
                 GetBuilder<PopularItemController>(builder: (controller){
-                  return Stack(
-                    children: [
-                      AppIcon(icon: Icons.shopping_cart_checkout_outlined),
-                      Get.find<PopularItemController>().totalItems>=1?
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: AppIcon(
-                          icon: Icons.circle,
-                          size: 20,
-                          iconColor: Colors.transparent,
-                          backgroundColor: Colors.blue,
-                        ),
-                      ) :
-                      Container(),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: BigText(text: Get.find<PopularItemController>().totalItems.toString(),
-                          size: 12, color: Colors.white,
-                        ),
-                      )
-                    ],
+                  return GestureDetector(
+                    onTap: (){
+                      Get.toNamed(RoutesHelper.getCart());
+                    },
+                    //Display items in cart
+                    child: Stack(
+                      children: [
+                        AppIcon(icon: Icons.shopping_cart_checkout_outlined),
+                        controller.totalItems>=1?
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: AppIcon(
+                            icon: Icons.circle,
+                            size: 20,
+                            iconColor: Colors.transparent,
+                            backgroundColor: Colors.blue,
+                          ),
+                        ) :
+                        Container(),
+                        controller.totalItems>=1?
+                        Positioned(
+                          top: 3,
+                          right: 3,
+                          child: BigText(
+                            text: Get.find<PopularItemController>().totalItems.toString(),
+                            size: 8, color: Colors.white,
+                          ),
+                        ): Container(),
+                      ],
+                    ),
                   );
                 },)
               ],

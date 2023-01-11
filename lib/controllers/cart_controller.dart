@@ -5,13 +5,16 @@ import 'package:majisoft/models/product_model.dart';
 
 import '../models/cart_model.dart';
 
-class CartController extends GetxService{
+class CartController extends GetxController{
   final CartRepo cartRepo;
   CartController({required this.cartRepo});
 
   Map<int, CartModel> _items={};
 
   Map<int, CartModel> get items => _items;
+
+  //only for storage purposes
+  List<CartModel> storageItems=[];
 
   void addItem(ProductModel product, int quantity){
     var totalQuantity = 0;
@@ -26,6 +29,7 @@ class CartController extends GetxService{
           quantity: value.quantity!+quantity,
           isExist: true,
           time: DateTime.now().toString(),
+          product: product,
         );
       });
       if(totalQuantity<=0){
@@ -41,6 +45,7 @@ class CartController extends GetxService{
           quantity: quantity,
           isExist: true,
           time: DateTime.now().toString(),
+          product: product,
         ));
       }else{
         Get.snackbar('Item count', "Add at least 1 item in the cart!",
@@ -49,8 +54,8 @@ class CartController extends GetxService{
         );
       }
     }
-
-
+    cartRepo.addToCartList(getItems);
+    update();
   }
 
   bool existInCart(ProductModel product){
@@ -81,4 +86,62 @@ class CartController extends GetxService{
 
     return totalQuantity;
   }
+
+  List<CartModel> get getItems{
+    //return a list of objects from _items map
+    return _items.entries.map((e){
+      return e.value;
+    }).toList();
+  }
+
+  //get the total price of products in cart
+  int get totalAmount{
+    var total = 0;
+    _items.forEach((key, value) {
+      total += value.quantity!*value.price!;
+    });
+    return total;
+  }
+
+  List<CartModel> getCartData(){
+    setCart = cartRepo.getCartList();
+    return storageItems;
+  }
+
+  set setCart(List<CartModel> items){
+    storageItems = items;
+    for(int i=0; i<storageItems.length; i++){
+      _items.putIfAbsent(storageItems[i].product!.id!, () => storageItems[i]);
+    }
+  }
+
+  void addToHistory(){
+    cartRepo.addToCartHistoryList();
+    clear();
+  }
+
+  void clear(){
+    _items={};
+    update();
+  }
+
+  List<CartModel> getCartHistoryList(){
+    return cartRepo.getCartHistory();
+  }
+
+  set setItems(Map<int, CartModel> setItems){
+    _items = {};
+    _items = setItems;
+  }
+
+  void addToCartList(){
+    cartRepo.addToCartList(getItems);
+    update();
+  }
+
+  void clearCartHistory(){
+    cartRepo.clearCartHistory();
+    update();
+  }
+
 }
