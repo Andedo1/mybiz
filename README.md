@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# majisoft
+# mybiz
 
 A new Flutter project.
 
@@ -17,5 +17,8 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 =======
 # mybiz
-This is a chain of stores from street grocery vendors to a variety of service providers including water bowsers.
+
+This is a chain of stores featuring local markets from street grocery vendors to a variety of service providers
+including laundry, water delivery, massage and therapy, plumbing etc. Download the app from
+play store to check which goods and services are available in your local neighbourhood.
 >>>>>>> 446acebf87b2716c5e43c824e58d1478eda4adb5
