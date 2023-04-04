@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:majisoft/screens/Home/mainItem.dart';
-import 'package:majisoft/screens/auth/signin_page.dart';
-import 'package:majisoft/screens/auth/signup_page.dart';
 import 'package:majisoft/screens/cart/cart_history.dart';
 
 import '../account/account_page.dart';
+import '../order/oder_history_page.dart';
 //import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,11 +21,7 @@ class _HomePageState extends State<HomePage> {
 
   List pages=[
     const MainItem(),
-    Container(
-      width: double.maxFinite,
-      child: Center(child: Text("Order history page"),
-      ),
-    ),
+    const OrderPage(),
     const CartHistory(),
     const AccountPage()
   ];

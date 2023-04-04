@@ -38,7 +38,7 @@ class RecommendedItemDetail extends StatelessWidget {
                       Get.toNamed(RoutesHelper.getInitial());
                     }
                   },
-                  child: AppIcon(icon: Icons.clear,),
+                  child: const AppIcon(icon: Icons.clear,),
                 ),
                 GetBuilder<PopularItemController>(builder: (controller){
                   return GestureDetector(
@@ -47,9 +47,9 @@ class RecommendedItemDetail extends StatelessWidget {
                     },
                     child: Stack(
                       children: [
-                        AppIcon(icon: Icons.shopping_cart_outlined),
+                        const AppIcon(icon: Icons.shopping_cart_outlined),
                         controller.totalItems>=1?
-                        Positioned(
+                        const Positioned(
                           top: 0,
                           right: 0,
                           child: AppIcon(
@@ -88,7 +88,10 @@ class RecommendedItemDetail extends StatelessWidget {
                   color: Colors.white,
                 ),
                 child: Center(
-                  child: BigText(size: Dimension.font26, text: item.name!,),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: Dimension.width10, vertical: Dimension.height10/2),
+                    child: BigText(size: Dimension.font26, text: item.name!,),
+                  ),
                 ),
               ),
             ),
@@ -97,7 +100,7 @@ class RecommendedItemDetail extends StatelessWidget {
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
               background: Image.network(
-                AppConstants.BASE_URL+"/uploads/"+item.img!,
+                "${AppConstants.BASE_URL}/uploads/${item.img!}" ,
                 width: double.maxFinite,
                 fit: BoxFit.cover,
               ),

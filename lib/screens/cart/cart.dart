@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:majisoft/controllers/auth_controller.dart';
+import 'package:majisoft/controllers/location_controller.dart';
+import 'package:majisoft/controllers/order_controller.dart';
 import 'package:majisoft/controllers/popular_item_controller.dart';
 import 'package:majisoft/controllers/recommended_item_controller.dart';
+import 'package:majisoft/controllers/user_controller.dart';
+import 'package:majisoft/models/place_order_model.dart';
 import 'package:majisoft/root/no_data_page.dart';
+import 'package:majisoft/root/show_snackback.dart';
 import 'package:majisoft/routes/routes_helper.dart';
+import 'package:majisoft/screens/order/delivery_options.dart';
 import 'package:majisoft/utils/app_constants.dart';
 import 'package:majisoft/utils/dimensions.dart';
 import 'package:majisoft/widgets/app_icon.dart';
 import 'package:majisoft/widgets/big_text.dart';
+import 'package:majisoft/screens/order/payment_options_button.dart';
 import 'package:majisoft/widgets/small_text.dart';
+import 'package:majisoft/widgets/text_field.dart';
 
 import '../../controllers/cart_controller.dart';
+import '../../widgets/custom_text_button.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    TextEditingController notesController = TextEditingController();
     return Scaffold(
       body: Stack(
         children: [
@@ -70,7 +80,7 @@ class CartPage extends StatelessWidget {
                     return ListView.builder(
                       itemCount: _cartList.length,
                       itemBuilder: (_, index){
-                        return Container(
+                        return SizedBox(
                           width: double.maxFinite,
                           height: 100,
                           child: Row(
@@ -111,14 +121,14 @@ class CartPage extends StatelessWidget {
                               ),
                               SizedBox(width: Dimension.width10,),
                               Expanded(
-                                child: Container(
+                                child: SizedBox(
                                   height: Dimension.height20*5,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       BigText(text: cartController.getItems[index].name!, color: Colors.black,),
-                                      SmallText(text: "clean water"),
+                                      SmallText(text: "sample text goes here"),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
@@ -133,18 +143,18 @@ class CartPage extends StatelessWidget {
                                               children: [
                                                 GestureDetector(
                                                   onTap: (){
-                                                    cartController.addItem(_cartList[index].product!, -100);
+                                                    cartController.addItem(_cartList[index].product!, -1);
                                                   },
-                                                  child: Icon(Icons.remove, color: Colors.black,),
+                                                  child: const Icon(Icons.remove, color: Colors.black,),
                                                 ),
                                                 SizedBox(width: Dimension.width10,),
                                                 BigText(text: _cartList[index].quantity.toString()),//popularItem.inCartItems.toString(), size: Dimension.font20,),
                                                 SizedBox(width: Dimension.width10,),
                                                 GestureDetector(
                                                   onTap: (){
-                                                    cartController.addItem(_cartList[index].product!, 100);
+                                                    cartController.addItem(_cartList[index].product!, 1);
                                                   },
-                                                  child: Icon(Icons.add, color: Colors.black,),
+                                                  child: const Icon(Icons.add, color: Colors.black,),
                                                 ),
                                               ],
                                             ),
@@ -168,11 +178,18 @@ class CartPage extends StatelessWidget {
           })
         ],
       ),
-      bottomNavigationBar: GetBuilder<CartController>(
+      bottomNavigationBar: GetBuilder<OrderController>(builder: (orderController){
+        notesController.text = orderController.itemNote;
+        return GetBuilder<CartController>(
           builder: (cartController){
             return Container(
-              height: Dimension.bottomHeight,
-              padding: EdgeInsets.only(top: Dimension.height30, bottom: Dimension.height30, left: Dimension.width20, right: Dimension.width20),
+              height: Dimension.bottomHeight+50,
+              padding: EdgeInsets.only(
+                top: Dimension.height10,
+                bottom: Dimension.height10,
+                left: Dimension.width20,
+                right: Dimension.width20,
+              ),
               decoration: BoxDecoration(
                 color: Colors.grey.withOpacity(0.4),
                 borderRadius: BorderRadius.only(
@@ -180,47 +197,183 @@ class CartPage extends StatelessWidget {
                   topRight: Radius.circular(Dimension.radius20*2),
                 ),
               ),
-              child: cartController.getItems.isNotEmpty?Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: cartController.getItems.isNotEmpty?Column(
                 children: [
-                  Container(
-                    padding: EdgeInsets.only(top: Dimension.height20, bottom: Dimension.height20, left: Dimension.width20, right: Dimension.width20),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Dimension.radius20),
-                      color: Colors.white,
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(width: Dimension.width10,),
-                        BigText(text: "Ksh ${cartController.totalAmount.toString()}", size: Dimension.font20,),
-                        SizedBox(width: Dimension.width10,),
-                      ],
+                  // payment options
+                  InkWell(
+                    onTap: ()=>showModalBottomSheet(
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      builder: (_){
+                        return Column(
+                          children: [
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height*0.9,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(Dimension.radius20),
+                                      topRight: Radius.circular(Dimension.radius20),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.only(
+                                          left: Dimension.width20,
+                                          right: Dimension.width20,
+                                          top: Dimension.height20,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const PaymentOptionsBtn(
+                                              title: "Cash on delivery",
+                                              index: 0,
+                                              icon: Icons.money,
+                                              subtitle: "pay cash after receiving items",
+                                            ),
+                                            SizedBox(height: Dimension.height10,),
+                                            const PaymentOptionsBtn(
+                                              title: "Digital payment",
+                                              index: 1,
+                                              icon: Icons.paypal,
+                                              subtitle: "secure and faster method of payment",
+                                            ),
+                                            SizedBox(height: Dimension.height30,),
+                                            Text(
+                                              "Delivery options",
+                                              style: TextStyle(
+                                                  fontSize: Dimension.font16
+                                              ),
+                                            ),
+                                            SizedBox(height: Dimension.height10/2,),
+                                            DeliveryOptions(
+                                              title: "Home delivery",
+                                              amount: double.parse(Get.find<CartController>().totalAmount.toString()),
+                                              value: "delivery",
+                                              isFree: false,
+                                            ),
+                                            SizedBox(height: Dimension.height10/2,),
+                                            const DeliveryOptions(
+                                              title: "Take away",
+                                              amount: 0.0,
+                                              value: "take away",
+                                              isFree: true,
+                                            ),
+                                            SizedBox(height: Dimension.height20/2,),
+                                            Text(
+                                              "Additional Info",
+                                              style: TextStyle(
+                                                  fontSize: Dimension.font16
+                                              ),
+                                            ),
+                                            SizedBox(height: Dimension.height20,),
+                                            AppTextField(
+                                              textEditingController: notesController,
+                                              icon: Icons.note,
+                                              hintText: 'notes',
+                                              maxLines: true,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ).whenComplete(() => orderController.setItemNote(notesController.text.trim())),
+                    child: const SizedBox(
+                      width: double.maxFinite,
+                      child: CustomTextButton(text: "payment options",),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: (){
-                      if(Get.find<AuthController>().userLoggedIn()){
-                        cartController.addToHistory();
-                      }else{
-                        Get.toNamed(RoutesHelper.getSignInPage());
-                      }
-
-                    },
-                    child: Container(
-                      padding: EdgeInsets.only(top: Dimension.height20, bottom: Dimension.height20, left: Dimension.width20, right: Dimension.width20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(Dimension.radius20),
-                        color: Colors.green,
+                  SizedBox(height: Dimension.height10,),
+                  // checkout button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(top: Dimension.height20, bottom: Dimension.height20, left: Dimension.width20, right: Dimension.width20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(Dimension.radius20),
+                          color: Colors.white,
+                        ),
+                        child: Row(
+                          children: [
+                            SizedBox(width: Dimension.width10,),
+                            BigText(text: "Ksh ${cartController.totalAmount.toString()}", size: Dimension.font20,),
+                            SizedBox(width: Dimension.width10,),
+                          ],
+                        ),
                       ),
-                      child: BigText(text: "Checkout", color: Colors.white,),
-                    ),
-                  )
+                      GestureDetector(
+                        onTap: (){
+                          if(Get.find<AuthController>().userLoggedIn()){
+                            //cartController.addToHistory();
+                            if(Get.find<LocationController>().addressList.isEmpty){
+                              Get.toNamed(RoutesHelper.getAddressPage());
+                            }else{
+                              var location = Get.find<LocationController>().getUserAddress();
+                              var cart = Get.find<CartController>().getItems;
+                              var user = Get.find<UserController>().userModel;
+                              PlaceOrderModel placeOrder = PlaceOrderModel(
+                                cart: cart,
+                                orderAmount: 100.0,
+                                orderNote: orderController.itemNote,
+                                address: location.address,
+                                latitude: location.latitude,
+                                longitude: location.longitude,
+                                contactPerson: user.name,
+                                contactPersonNumber: user.phone,
+                                scheduleAte: '',
+                                distance: 20.1,
+                                paymentMethod: orderController.paymentIndex==0?'cash_on_delivery':'digital_payment',
+                                orderType: orderController.orderType,
+                              );
+                              Get.find<OrderController>().placeOrder(
+                                placeOrder,
+                                _callBack,
+                              );
+                            }
+                            cartController.addToHistory();
+                          }else{
+                            Get.toNamed(RoutesHelper.getSignInPage());
+                          }
+                        },
+                        child: const CustomTextButton(
+                          text: "Checkout",
+                        ),
+                      )
+                    ],
+                  ),
                 ],
               ):
-                  Container(),
+              Container(),
             );
           },
-        ),
+        );
+      },),
     );
+  }
+  void _callBack(bool isSuccess, String message, String orderID){
+    if(isSuccess){
+      Get.find<CartController>().clear();
+      Get.find<CartController>().removeCartSharedPreferences();
+      Get.find<CartController>().addToHistory();
+      if(Get.find<OrderController>().paymentIndex==0){
+        Get.offNamed(RoutesHelper.getOrderSuccess(orderID, "success"));
+      }else{
+        Get.offNamed(RoutesHelper.getPaymentPage(orderID, Get.find<UserController>().userModel.id));
+      }
+    }else{
+      showCustomSnackBack(message);
+    }
   }
 }

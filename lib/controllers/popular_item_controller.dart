@@ -23,7 +23,7 @@ class PopularItemController extends GetxController{
     Response response = await popularItemRepo.getPopularItemList();
     if(response.statusCode==200){
       _popularItemList = [];
-      _popularItemList.addAll(Product.fromJson(response.body).products);
+      _popularItemList.addAll(Product.fromJson(response.body).products.reversed);
       _isLoaded = true;
       update();
     }else{
@@ -39,9 +39,9 @@ class PopularItemController extends GetxController{
 
   void setQuantity(bool isIncrement){
     if(isIncrement){
-      _quantity = checkQuantity(_quantity+100);
+      _quantity = checkQuantity(_quantity+1);
     }else{
-      _quantity = checkQuantity(_quantity-100);
+      _quantity = checkQuantity(_quantity-1);
     }
     update();
   }
@@ -76,11 +76,11 @@ class PopularItemController extends GetxController{
     exist = _cart.existInCart(product);
     //if exists
     //get from storage _inCartItems
-    print("exist or not ${exist.toString()}");
+    //print("exist or not ${exist.toString()}");
     if(exist){
       _inCartItems = _cart.getQuantity(product);
     }
-    print("the quantity in cart is${_inCartItems.toString()}");
+    //print("the quantity in cart is${_inCartItems.toString()}");
   }
 
   void addItem(ProductModel product){
@@ -90,7 +90,7 @@ class PopularItemController extends GetxController{
 
       //debug method
       _cart.items.forEach((key, value) { 
-        print("the id is ${value.id} quantity is ${value.quantity}");
+        //print("the id is ${value.id} quantity is ${value.quantity}");
       });
       update();
   }

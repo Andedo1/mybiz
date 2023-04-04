@@ -6,7 +6,7 @@ import 'package:majisoft/widgets/small_text.dart';
 
 class AppColumn extends StatelessWidget {
   final String text;
-  AppColumn({Key? key, required this.text}) : super(key: key);
+  const AppColumn({Key? key, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +18,13 @@ class AppColumn extends StatelessWidget {
         Row(
           children: [
             Wrap(
-              children: List.generate(5, (index) => Icon(Icons.star, color: Colors.blue,)),
+              children: List.generate(5, (index) => Icon(Icons.star, color: Colors.blue, size: Dimension.iconSize16,)),
             ),
-            SizedBox(width: 10,),
+            const SizedBox(width: 10,),
             SmallText(text: "5"),
-            SizedBox(width: 10,),
+            const SizedBox(width: 10,),
             SmallText(text: "Comments"),
-            SizedBox(width: 10,),
+            const SizedBox(width: 10,),
             SmallText(text: "100"),
           ],
         ),

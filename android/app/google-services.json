@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "424946848113",
+    "project_id": "water-delivery-ff43d",
+    "storage_bucket": "water-delivery-ff43d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424946848113:android:84667a41b1584b94a2a6d0",
+        "android_client_info": {
+          "package_name": "com.example.majisoft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424946848113-jrfpl94bhbdb1dma0gjdef1fiqqoc3m2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGVskOCj2mlpYvhRQF4E1YZ-VreCOhPSw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424946848113-jrfpl94bhbdb1dma0gjdef1fiqqoc3m2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

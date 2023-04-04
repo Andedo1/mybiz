@@ -23,10 +23,14 @@ class MyApp extends StatelessWidget {
     return GetBuilder<PopularItemController>(builder: (_){
       return GetBuilder<RecommendedItemController>(builder: (_){
         return GetMaterialApp(
-          title: 'Majisoft App',
+          title: 'Qiu',
           debugShowCheckedModeBanner: false,
           initialRoute: RoutesHelper.getSplashScreen(),
           getPages: RoutesHelper.routes,
+          theme: ThemeData(
+            primaryColor: Colors.green,
+            fontFamily: ""
+          ),
         );
       });
     },);

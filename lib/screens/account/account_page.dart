@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:majisoft/controllers/auth_controller.dart';
 import 'package:majisoft/controllers/cart_controller.dart';
 import 'package:majisoft/controllers/user_controller.dart';
+import 'package:majisoft/root/custom_appbar.dart';
 import 'package:majisoft/root/custom_loading_screen.dart';
 import 'package:majisoft/routes/routes_helper.dart';
 import 'package:majisoft/utils/dimensions.dart';
@@ -9,6 +10,7 @@ import 'package:majisoft/widgets/app_icon.dart';
 import 'package:majisoft/widgets/big_text.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/location_controller.dart';
 import '../../widgets/account_widget.dart';
 
 class AccountPage extends StatelessWidget {
@@ -21,11 +23,8 @@ class AccountPage extends StatelessWidget {
       Get.find<UserController>().getUserInfo();
     }
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.green,
-        centerTitle: true,
-        title: BigText(text: "Profile", size: 24, color: Colors.white,),
+      appBar: const CustomAppBar(
+        title: "Profile",
       ),
       body: GetBuilder<UserController>(builder: (userController){
         return _userIsLoggedIn?(userController.isLoading?
@@ -84,16 +83,41 @@ class AccountPage extends StatelessWidget {
                       ),
                       SizedBox(height: Dimension.height20,),
                       // Address
-                      AccountWidget(
-                        appIcon: AppIcon(
-                          icon: Icons.location_on,
-                          backgroundColor: Colors.yellow,
-                          iconColor: Colors.white,
-                          iconSize: Dimension.height10*5/2,
-                          size: Dimension.height10*5,
-                        ),
-                        bigText: BigText(text: 'Bermuda plaza',),
-                      ),
+                      GetBuilder<LocationController>(builder: (locationController){
+                        if(_userIsLoggedIn&&locationController.addressList.isEmpty){
+                          return GestureDetector(
+                            onTap: (){
+                              Get.offNamed(RoutesHelper.getAddressPage());
+                            },
+                            child: AccountWidget(
+                              appIcon: AppIcon(
+                                icon: Icons.location_on,
+                                backgroundColor: Colors.yellow,
+                                iconColor: Colors.white,
+                                iconSize: Dimension.height10*5/2,
+                                size: Dimension.height10*5,
+                              ),
+                              bigText: BigText(text: 'Fill in you address',),
+                            ),
+                          );
+                        }else{
+                          return GestureDetector(
+                            onTap: (){
+                              Get.offNamed(RoutesHelper.getAddressPage());
+                            },
+                            child: AccountWidget(
+                              appIcon: AppIcon(
+                                icon: Icons.location_on,
+                                backgroundColor: Colors.yellow,
+                                iconColor: Colors.white,
+                                iconSize: Dimension.height10*5/2,
+                                size: Dimension.height10*5,
+                              ),
+                              bigText: BigText(text: 'Your address',),
+                            ),
+                          );
+                        }
+                      }),
                       SizedBox(height: Dimension.height20,),
                       // About
                       AccountWidget(
@@ -114,6 +138,7 @@ class AccountPage extends StatelessWidget {
                             Get.find<AuthController>().clearSharedData();
                             Get.find<CartController>().clear();
                             Get.find<CartController>().clearCartHistory();
+                            Get.find<LocationController>().clearAddressList();
                             Get.toNamed(RoutesHelper.getSignInPage());
                           }
                         },
@@ -135,8 +160,9 @@ class AccountPage extends StatelessWidget {
             ],
           ),
         ):
-        const CustomLoadingScreen()):
-        Center(
+        const CustomLoadingScreen())
+        // Account page lock screen
+            : Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

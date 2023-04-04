@@ -4,10 +4,12 @@ import 'package:majisoft/utils/dimensions.dart';
 class AppTextField extends StatelessWidget {
   final TextEditingController textEditingController;
   final IconData icon;
-  final bool isObscure;
+  bool isObscure;
+  bool maxLines;
   final String hintText;
-  const AppTextField({Key? key, required this.textEditingController,
-  required this.hintText, required this.icon, this.isObscure=false}) : super(key: key);
+  AppTextField({Key? key, required this.textEditingController,
+  required this.hintText, required this.icon, this.isObscure=false,
+  this.maxLines=false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class AppTextField extends StatelessWidget {
           ]
       ),
       child: TextField(
+        maxLines: maxLines?3:1,
         controller: textEditingController,
         obscureText: isObscure?true:false,
         decoration: InputDecoration(

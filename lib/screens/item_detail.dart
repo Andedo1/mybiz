@@ -38,7 +38,7 @@ class ItemDetail extends StatelessWidget {
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                    AppConstants.BASE_URL+"/uploads/"+item.img!
+                    "${AppConstants.BASE_URL}/uploads/${item.img!}"
                   )
                 )
               ),
@@ -49,54 +49,57 @@ class ItemDetail extends StatelessWidget {
             top: Dimension.height45,
             left: Dimension.width20,
             right: Dimension.width20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: (){
-                    if(page=="cart"){
-                      Get.toNamed(RoutesHelper.getCart());
-                    }else{
-                      Get.toNamed(RoutesHelper.getInitial());
-                    }
-                  },
-                  child: AppIcon(icon: Icons.arrow_back_ios),
-                ),
-                GetBuilder<PopularItemController>(builder: (controller){
-                  return GestureDetector(
+            child: Padding(
+              padding: EdgeInsets.only(top: Dimension.height20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
                     onTap: (){
-                      Get.toNamed(RoutesHelper.getCart());
+                      if(page=="cart"){
+                        Get.toNamed(RoutesHelper.getCart());
+                      }else{
+                        Get.toNamed(RoutesHelper.getInitial());
+                      }
                     },
-                    //Display items in cart
-                    child: Stack(
-                      children: [
-                        AppIcon(icon: Icons.shopping_cart_checkout_outlined),
-                        controller.totalItems>=1?
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: AppIcon(
-                            icon: Icons.circle,
-                            size: 20,
-                            iconColor: Colors.transparent,
-                            backgroundColor: Colors.blue,
-                          ),
-                        ) :
-                        Container(),
-                        controller.totalItems>=1?
-                        Positioned(
-                          top: 3,
-                          right: 3,
-                          child: BigText(
-                            text: Get.find<PopularItemController>().totalItems.toString(),
-                            size: 8, color: Colors.white,
-                          ),
-                        ): Container(),
-                      ],
-                    ),
-                  );
-                },)
-              ],
+                    child: const AppIcon(icon: Icons.arrow_back_ios),
+                  ),
+                  GetBuilder<PopularItemController>(builder: (controller){
+                    return GestureDetector(
+                      onTap: (){
+                        Get.toNamed(RoutesHelper.getCart());
+                      },
+                      //Display items in cart
+                      child: Stack(
+                        children: [
+                          const AppIcon(icon: Icons.shopping_cart_checkout_outlined),
+                          controller.totalItems>=1?
+                          const Positioned(
+                            top: 0,
+                            right: 0,
+                            child: AppIcon(
+                              icon: Icons.circle,
+                              size: 20,
+                              iconColor: Colors.transparent,
+                              backgroundColor: Colors.blue,
+                            ),
+                          ) :
+                          Container(),
+                          controller.totalItems>=1?
+                          Positioned(
+                            top: 3,
+                            right: 3,
+                            child: BigText(
+                              text: Get.find<PopularItemController>().totalItems.toString(),
+                              size: 8, color: Colors.white,
+                            ),
+                          ): Container(),
+                        ],
+                      ),
+                    );
+                  },)
+                ],
+              ),
             ),
           ),
           // Introduction of Item
